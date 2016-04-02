@@ -1,0 +1,10 @@
+= t(:"invitation.link_help", group_name: @invitation.invitable_name)
+= invitation_url(@invitation)
+\
+= @message_body
+\
+= t(:"invitation.value_proposition")
+\
+= t(:"invitation.thanks")
+\
+= @invitation.inviter.name

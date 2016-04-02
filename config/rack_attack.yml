@@ -1,0 +1,47 @@
+# To customize periods and limits, simply add period or limit to the model's configuration, like so:
+#
+# group_creation:
+#   route: (GROUP_ROUTE_REGEX)
+#   period: 10
+#   limit: 5
+# (don't allow more than 5 group creations per 10 seconds)
+
+# Methods will default to POST (usually used for object creation)
+# to specify a different route, just add the 'method' key:
+#
+# group_visit:
+#   route: (GROUP_ROUTE_REGEX)
+#   method: GET
+#   period: 60
+#   limit: 5
+# (don't allow more than 5 visits to a discussion per minute)
+#
+# NB: period is measured in seconds; (eg period: 120 = X requests per 2 minutes)
+
+
+group_creation_minute:
+  period: 60
+  limit: 3
+  path: ^\/g$
+
+group_creation_day:
+  period: 86400
+  limit: 20
+  path: ^\/g$
+
+comment_creation_minute:
+  path: ^\/d\/[A-Za-z0-9]*\/add_comment$
+
+discussion_creation:
+  path: ^\/d$
+
+motion_creation:
+  path: ^\/m$
+
+vote_creation:
+  path: ^\/m\/[A-Za-z0-9]*\/votes$
+
+default:
+  period: 60
+  limit: 10
+  method: POST

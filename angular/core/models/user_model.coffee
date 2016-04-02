@@ -1,0 +1,56 @@
+angular.module('loomioApp').factory 'UserModel', (BaseModel, AppConfig) ->
+  class UserModel extends BaseModel
+    @singular: 'user'
+    @plural: 'users'
+    @apiEndPoint: 'profile'
+    @serializableAttributes: AppConfig.permittedParams.user
+
+    relationships: ->
+      # note we should move these to a CurrentUser extends User so that all our authors dont get views created
+      @hasMany 'memberships'
+      @hasMany 'notifications'
+      @hasMany 'contacts'
+      @hasMany 'versions'
+
+    membershipFor: (group) ->
+      _.first @recordStore.memberships.find(groupId: group.id, userId: @id)
+
+    isMemberOf: (group) ->
+      @membershipFor(group)?
+
+    groupIds: ->
+      _.map(@memberships(), 'groupId')
+
+    groups: ->
+      groups = _.filter @recordStore.groups.find(id: { $in: @groupIds() }), (group) -> !group.isArchived()
+      _.sortBy groups, 'fullName'
+
+    parentGroups: ->
+      _.filter @groups(), (group) -> group.isParent()
+
+    allThreads:->
+      _.flatten _.map @groups(), (group) ->
+        group.discussions()
+
+    orphanSubgroups: ->
+      _.filter @groups(), (group) =>
+        group.isSubgroup() and !@isMemberOf(group.parent())
+
+    isAuthorOf: (object) ->
+      @id == object.authorId
+
+    isAdminOf: (group) ->
+      _.contains(group.adminIds(), @id)
+
+    isMemberOf: (group) ->
+      _.contains(group.memberIds(), @id)
+
+    firstName: ->
+      @name.split(' ')[0]
+
+    lastName: ->
+      @name.split(' ').slice(1).join(' ')
+
+    saveVolume: (volume) ->
+      @update(defaultMembershipVolume: volume)
+      @recordStore.users.updateProfile(@)

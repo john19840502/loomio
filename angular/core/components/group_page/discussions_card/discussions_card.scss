@@ -1,0 +1,35 @@
+.discussions-card{
+  @include cardNoPadding;
+}
+
+.discussions-card__header{
+  margin: $cardPaddingSize $cardPaddingSize 0 $cardPaddingSize;
+  @include displayFlex;
+  -webkit-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+.discussions-card__new-thread-button{
+  @include lmoBtnFeatured;
+  @include lmoBtnIcon;
+  @include fontSmall;
+  float: right;
+  margin-bottom: $cardPaddingSize;
+}
+
+.discussions-card__list--empty {
+  margin: 0 17px 10px 17px;
+  padding: 20px 0;
+  text-align: center;
+}
+
+.discussions-card__list{
+  clear: both;
+}
+
+.discussions-card__show-more {
+  @include cardMinorAction;
+  @include lmoBtnLink;
+}

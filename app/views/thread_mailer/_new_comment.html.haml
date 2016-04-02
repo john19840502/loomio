@@ -1,0 +1,14 @@
+- comment = item.eventable
+%table
+  %tr
+    %td.icon
+      = render 'base/linked_avatar', user: comment.user
+    %td.content
+      %b= comment.author.name
+      %br
+      - if comment.uses_markdown?
+        = render_rich_text(comment.body)
+      - else
+        = render_email_plaintext comment.body
+      - if comment.attachments.any?
+        = render "thread_mailer/attachments", comment: comment
